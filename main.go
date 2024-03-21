@@ -22,5 +22,6 @@ func main(){
 	http.HandleFunc("/whoami", whoami)
 	http.HandleFunc("/count", getcount)
 	http.HandleFunc("/addcoount", addcount)
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Print("running server")
+	log.Print(http.ListenAndServe("0.0.0.0:8080", nil))
 }
