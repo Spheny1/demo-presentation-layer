@@ -12,7 +12,7 @@ var serviceDiscovery string;
 var dataURI string;
 var deploymentName string;
 func whoami(w http.ResponseWriter, req *http.Request){
-	fmt.Fprintf(w,"this is main \n")	
+	fmt.Fprintf(w,"this is a feature branch\n")	
 }
 
 func getcount(w http.ResponseWriter, req *http.Request){
@@ -29,6 +29,11 @@ func getcount(w http.ResponseWriter, req *http.Request){
 
 func addcount(w http.ResponseWriter, req *http.Request){
 	_ , err := http.Get(dataURI + "/addcount")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Fprintf(w,"Incremented \n")	
+	_ , err = http.Get(dataURI + "/addcount")
 	if err != nil {
 		panic(err)
 	}
