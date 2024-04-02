@@ -2,11 +2,10 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
-
-	//	"os"
-	"io/ioutil"
+	"os"
 )
 
 var serviceDiscovery string;
@@ -17,7 +16,7 @@ func whoami(w http.ResponseWriter, req *http.Request){
 }
 
 func getcount(w http.ResponseWriter, req *http.Request){
-	resp, err := http.Get(dataUri + "/count")
+	resp, err := http.Get(dataURI + "/count")
 	if err != nil {
 		panic(err)	
 	}
@@ -25,11 +24,14 @@ func getcount(w http.ResponseWriter, req *http.Request){
 	if err != nil {
 		panic(err)	
 	}
-	fmt.Fprintf(w,dataURI)
+	fmt.Fprintf(w,string(body))
 }
 
 func addcount(w http.ResponseWriter, req *http.Request){
-	resp, err := http.Get(dataUri + "/addcount")
+	_ , err := http.Get(dataURI + "/addcount")
+	if err != nil {
+		panic(err)
+	}
 	fmt.Fprintf(w,"Incremented \n")	
 }
 
@@ -47,7 +49,7 @@ func main(){
 	dataURI = string(body)
 	http.HandleFunc("/whoami", whoami)
 	http.HandleFunc("/count", getcount)
-	http.HandleFunc("/addc`ount", addcount)
+	http.HandleFunc("/addcount", addcount)
 	log.Print("running server")
 	log.Print(http.ListenAndServe("0.0.0.0:8080", nil))
 }

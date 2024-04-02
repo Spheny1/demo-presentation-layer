@@ -1,9 +1,24 @@
-FROM golang:1.22.1
-RUN mkdir /app 
-ADD . /app/ 
-WORKDIR /app 
-RUN go build -o /bin/presentation-layer .
-#FROM scratch
-#COPY --from=0 /bin/presentation-layer /bin/presentation-layer
+############################
+# STEP 1 build executable binary
+############################
+FROM golang:alpine AS builder
+# Install git.
+# Git is required for fetching the dependencies.
+RUN apk update && apk add --no-cache git 
+WORKDIR . 
+COPY . .
+# Fetch dependencies.
+# Using go get.
+RUN go get -d -v
+# Build the binary.
+RUN go build -ldflags='-s -w -extldflags "-static"' -o /go/bin/presentation-layer
+############################
+# STEP 2 build a small image
+############################
+FROM scratch
+# Copy our static executable.
+COPY --from=builder /go/bin/presentation-layer /go/bin/presentation-layer
 EXPOSE 8080
-CMD ["/bin/presentation-layer"]
+# Run the hello binary.
+
+ENTRYPOINT ["/go/bin/presentation-layer"]
