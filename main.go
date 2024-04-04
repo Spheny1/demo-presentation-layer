@@ -52,6 +52,9 @@ func main(){
 		panic(err)	
 	}
 	dataURI = string(body)
+	if len(dataURI) < 5 {
+		panic("restart service due to empty resp from service-discovery")
+	}
 	http.HandleFunc("/whoami", whoami)
 	http.HandleFunc("/count", getcount)
 	http.HandleFunc("/addcount", addcount)
