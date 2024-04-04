@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 )
 
 var serviceDiscovery string;
@@ -51,10 +52,11 @@ func main(){
 	if err != nil {
 		panic(err)	
 	}
-	dataURI = string(body)
+	dataURI = strings.TrimSpace(string(body))
 	if len(dataURI) < 5 {
 		panic("restart service due to empty resp from service-discovery")
 	}
+	dataURI = "http://" + dataURI
 	http.HandleFunc("/whoami", whoami)
 	http.HandleFunc("/count", getcount)
 	http.HandleFunc("/addcount", addcount)
